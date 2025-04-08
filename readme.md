@@ -21,9 +21,9 @@ Database: SQLite (dev) / PostgreSQL (prod)
 
 💥 Secure APIs
 
-👩‍💻 Author
+👩‍💻 Author:
 Made with ❤️ by Richa Bharti
 
-📄 License
+📄 License:
 MIT License
 
