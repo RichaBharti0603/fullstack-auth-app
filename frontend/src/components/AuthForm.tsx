@@ -1,54 +1,55 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 export const AuthForm: React.FC = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
+  const { register, handleSubmit } = useForm<FormValues>();
 
-  const mutation = useMutation({
-    mutationFn: (data: LoginFormData) =>
-      axios.post("http://localhost:5000/api/auth/register", data),
-    onSuccess: () => alert("User registered successfully!"),
-    onError: (err: any) => alert(err.response?.data?.message || "Error"),
-  });
-
-  const onSubmit = (data: LoginFormData) => {
-    mutation.mutate(data);
+  const onSubmit = (data: FormValues) => {
+    console.log("Login data", data);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <label>Email</label>
-        <input {...register("email")} />
-        {errors.email && <p>{errors.email.message}</p>}
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-white px-4">
+      <div className="w-full max-w-sm text-center">
+        <h1 className="text-2xl font-semibold mb-2">User Auth</h1>
+        <h2 className="text-xl font-medium text-gray-800 mb-8">Welcome Back 👋</h2>
 
-      <div>
-        <label>Password</label>
-        <input type="password" {...register("password")} />
-        {errors.password && <p>{errors.password.message}</p>}
-      </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 text-left">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              {...register("email")}
+              placeholder="richab820@gmail.com"
+              className="w-full px-4 py-2 mt-1 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+          </div>
 
-      <button type="submit" disabled={mutation.isPending}>
-        {mutation.isPending ? "Registering..." : "Register"}
-      </button>
-    </form>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <input
+              type="password"
+              {...register("password")}
+              placeholder="•••••••"
+              className="w-full px-4 py-2 mt-1 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#1F2A64] text-white py-2 rounded-md font-semibold hover:bg-[#152050] transition"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
